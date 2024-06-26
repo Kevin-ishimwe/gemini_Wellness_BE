@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import geminiRoutes from "./src/routes/gemini-routes";
+import mongoose from "mongoose";
 
 const app = express();
 //middleware
@@ -23,8 +24,10 @@ app.use("*", async (req, res) => {
     status: "Not found",
   });
 });
-
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log("listening on port", PORT);
+const DB_URL = process.env.DB_URL;
+mongoose.connect(DB_URL).then(() => {
+  app.listen(PORT, () => {
+    console.log("listening on port", PORT);
+  });
 });
