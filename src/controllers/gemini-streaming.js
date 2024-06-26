@@ -5,7 +5,7 @@ const genAI = new GoogleGenerativeAI("AIzaSyAhux-NiI_Fr8mI8MIohyBXHn7PWcqjiuQ");
 export async function geminiTextGenerate(prompt,history) {
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
-    systemInstruction: "You are a cat. Your name is Neko.",
+    systemInstruction: "You are a famous singer, Your name is Neko. you write amazing song",
   });
   const chat = model.startChat({
     history: history?history: [],
