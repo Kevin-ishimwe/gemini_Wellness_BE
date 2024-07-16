@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import geminiRoutes from "./src/routes/gemini-routes";
+import userRoutes from "./src/routes/user-js"
 import mongoose from "mongoose";
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //routes
 app.use(geminiRoutes);
+app.use(userRoutes)
 
 app.use("*", async (req, res) => {
   res.status(404).json({

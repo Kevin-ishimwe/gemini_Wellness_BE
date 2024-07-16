@@ -3,13 +3,12 @@ import { system_prompt, safety_settings } from "../middleware/gemini-config";
 
 const genAI = new GoogleGenerativeAI("AIzaSyAhux-NiI_Fr8mI8MIohyBXHn7PWcqjiuQ");
 
-export async function geminiTextGenerate(history, audioBlob) {
-  const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-    systemInstruction: system_prompt,
-    safetySettings: safety_settings,
-  });
-
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  systemInstruction: system_prompt,
+  safetySettings: safety_settings,
+});
+export async function geminiVoiceGenerate(history, audioBlob) {
   // Initialize the chat with optional chat history
   let chat = model.startChat({ history: history ? history : [] });
 
@@ -36,4 +35,21 @@ export async function geminiTextGenerate(history, audioBlob) {
   const result = await model.generateContent(request);
   const response = await result.response;
   return response.text();
+}
+
+export async function geminiTextGenerate(prompt, history) {
+  const chat = model.startChat({
+    history: history ? history : [],
+    generationConfig: {
+      maxOutputTokens: 500,
+    },
+  });
+  const result = await chat.sendMessageStream(prompt);
+  let text = "";
+  for await (const chunk of result.stream) {
+    const chunkText = await chunk.text(); // Assuming chunk.text() returns a Promise
+    console.log("AI: ", chunkText);
+    text += chunkText;
+  }
+  return text;
 }
