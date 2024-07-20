@@ -181,3 +181,44 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
+export const GoogleAuthHandler = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      "personalInfo.email": req.user.emails[0].value,
+    });
+   
+    if (!user) {
+      const hashed = await hashPassword("emailuserpassword@gemini");
+      const newUser = new User({
+        personalInfo: {
+          username: req.user.displayName,
+          email: req.user.emails[0].value,
+          password: hashed,
+        },
+      });
+      const savedUser = await newUser.save();
+      const userWithoutPassword = savedUser.toObject();
+      delete userWithoutPassword.personalInfo.password;
+      res.status(201).json({
+        message: "User added successfully",
+        data: userWithoutPassword,
+        status: "success",
+      });
+    }
+    const token = await generateToken(
+      req.user.emails[0].value,
+      user.personalInfo.password
+    );
+    const userWithoutPassword = user.toObject();
+    delete userWithoutPassword.personalInfo.password;
+    return res.status(200).json({
+      message: "Login successful",
+      status: "success",
+      token: token,
+      data: userWithoutPassword,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error,status:"failed" });
+  }
+};

@@ -4,6 +4,7 @@ import {
   geminiVoiceGenerate,
 } from "../controllers/gemini-streaming";
 import multer from "multer";
+import { authMiddleware } from "../middleware/jwt-config";
 
 const geminiRoutes = express.Router();
 const upload = multer();
@@ -11,7 +12,7 @@ const upload = multer();
 //routes
 geminiRoutes.post(
   "/conversation/voice",
-  upload.single("audioBlob"),
+  upload.single("audioBlob"),authMiddleware,
   async (req, res) => {
     try {
       const { history } = req.body;
