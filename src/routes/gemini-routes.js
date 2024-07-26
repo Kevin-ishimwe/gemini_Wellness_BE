@@ -2,6 +2,7 @@ import express from "express";
 import {
   geminiTextGenerate,
   geminiVoiceGenerate,
+  getHealthAnalysis
 } from "../controllers/gemini-streaming";
 import multer from "multer";
 import { authMiddleware } from "../middleware/jwt-config";
@@ -36,4 +37,5 @@ geminiRoutes.post("/conversation/chat", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+geminiRoutes.post("/health/analysis", getHealthAnalysis);
 export default geminiRoutes;

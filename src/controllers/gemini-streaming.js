@@ -1,7 +1,13 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { system_prompt, safety_settings } from "../middleware/gemini-config";
+import {
+  system_prompt,
+  safety_settings,
+  analysis_system_prompt,
+} from "../middleware/gemini-config";
 
-const genAI = new GoogleGenerativeAI("AIzaSyAhux-NiI_Fr8mI8MIohyBXHn7PWcqjiuQ");
+const API_KEY = process.env.GEMINI_KEY;
+
+const genAI = new GoogleGenerativeAI(API_KEY);
 
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
@@ -53,3 +59,38 @@ export async function geminiTextGenerate(prompt, history) {
   }
   return text;
 }
+
+export const getHealthAnalysis = async (req, res) => {
+  try {
+    const { userData } = req.body;
+
+    const genAI = new GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      systemInstruction: analysis_system_prompt,
+      safetySettings: safety_settings,
+    });
+    const prompt = `
+        Analyze the following health data and provide insights correct json format:
+        ${JSON.stringify(userData)}
+      `;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const analysisText = response.text();
+    const analysis = analysisText;
+
+    res.json({
+      message: "analysis complete",
+      data: analysis,
+      status: " success",
+    });
+  } catch (error) {
+    console.error("Error in AI health analysis:", error);
+    res.status(500).json({
+      status: " error",
+      message: "Error generating health analysis",
+      error: error.message,
+    });
+  }
+};

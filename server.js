@@ -27,7 +27,7 @@ passport.use(
     },
     function (accessToken, refreshToken, profile, cb) {
       // Here you would find or create a user in your database
-    
+
       return cb(null, profile);
     }
   )
@@ -35,8 +35,6 @@ passport.use(
 
 app.use(geminiRoutes);
 app.use(userRoutes);
-
-
 
 //routes
 
