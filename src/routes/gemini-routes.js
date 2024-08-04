@@ -2,7 +2,8 @@ import express from "express";
 import {
   geminiTextGenerate,
   geminiVoiceGenerate,
-  getHealthAnalysis
+  getHealthAnalysis,
+  getHealthAnalysisSpecific,
 } from "../controllers/gemini-streaming";
 import multer from "multer";
 import { authMiddleware } from "../middleware/jwt-config";
@@ -13,7 +14,7 @@ const upload = multer();
 //routes
 geminiRoutes.post(
   "/conversation/voice",
-  upload.single("audioBlob"),authMiddleware,
+  upload.single("audioBlob"),
   async (req, res) => {
     try {
       const { history } = req.body;
@@ -38,4 +39,5 @@ geminiRoutes.post("/conversation/chat", async (req, res) => {
   }
 });
 geminiRoutes.post("/health/analysis", getHealthAnalysis);
+geminiRoutes.post("/health/analysis/specific", getHealthAnalysisSpecific);
 export default geminiRoutes;

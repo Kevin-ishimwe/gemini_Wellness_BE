@@ -97,7 +97,7 @@ const userSchema = new Schema(
     goals: [
       {
         type: String,
-        target: Schema.Types.Mixed,
+        target: String,
         startDate: Date,
         endDate: Date,
         progress: Number,
