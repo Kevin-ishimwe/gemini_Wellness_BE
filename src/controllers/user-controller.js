@@ -1,7 +1,6 @@
 import { hashPassword, generateToken } from "../middleware/user-config";
 import User from "../models/User";
 import bcrypt from "bcrypt";
-import { OAuth2Client } from "google-auth-library";
 
 export const userAdd = async (req, res) => {
   try {
@@ -183,10 +182,9 @@ export const loginUser = async (req, res) => {
   }
 };
 
-
 export const GoogleAuthHandler = async (req, res) => {
   try {
-    const {email,name}=req.body.user
+    const { email, name } = req.body.user;
     const user = await User.findOne({
       "personalInfo.email": email,
     });
@@ -196,7 +194,7 @@ export const GoogleAuthHandler = async (req, res) => {
       const newUser = new User({
         personalInfo: {
           username: name,
-          email: password,
+          email: email,
           password: hashed,
         },
       });
@@ -209,10 +207,7 @@ export const GoogleAuthHandler = async (req, res) => {
         status: "success",
       });
     }
-    const token = await generateToken(
-      email,
-      user.personalInfo.password
-    );
+    const token = await generateToken(email, user.personalInfo.password);
     const userWithoutPassword = user.toObject();
     delete userWithoutPassword.personalInfo.password;
     return res.status(200).json({
@@ -222,6 +217,7 @@ export const GoogleAuthHandler = async (req, res) => {
       data: userWithoutPassword,
     });
   } catch (error) {
-    return res.status(500).json({ error: error, status: "failed" });
+    console.log(error);
+    return res.status(500).json({ error: error.message, status: "failed" });
   }
 };

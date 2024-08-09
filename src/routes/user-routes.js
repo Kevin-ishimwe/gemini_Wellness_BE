@@ -9,7 +9,6 @@ import {
   GoogleAuthHandler,
 } from "../controllers/user-controller";
 import { authMiddleware } from "../middleware/jwt-config";
-import passport from "passport";
 const router = express.Router();
 
 router.get("/user/all", authMiddleware, getAllUsers);

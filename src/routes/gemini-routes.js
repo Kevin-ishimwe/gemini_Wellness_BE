@@ -6,7 +6,7 @@ import {
   getHealthAnalysisSpecific,
 } from "../controllers/gemini-streaming";
 import multer from "multer";
-import { authMiddleware } from "../middleware/jwt-config";
+
 
 const geminiRoutes = express.Router();
 const upload = multer();
@@ -20,6 +20,7 @@ geminiRoutes.post(
       const { history } = req.body;
       res.status(201).json({
         response: await geminiVoiceGenerate(history, req.file),
+        status: "success",
       });
     } catch (error) {
       console.log(error);
@@ -30,12 +31,13 @@ geminiRoutes.post(
 geminiRoutes.post("/conversation/chat", async (req, res) => {
   try {
     const { history, prompt } = req.body;
-    res.status(201).json({
+    res.status(200).json({
       response: await geminiTextGenerate(prompt, history),
+      status: "success",
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, status: "fail" });
   }
 });
 geminiRoutes.post("/health/analysis", getHealthAnalysis);
