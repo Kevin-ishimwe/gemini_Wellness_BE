@@ -1,11 +1,15 @@
-FROM node:alpine
+FROM node:14
 
 WORKDIR /app
 
-COPY ./ ./
+COPY package*.json ./
 
-RUN npm install
+RUN npm ci --only=production
 
-EXPOSE 5000
+COPY . .
 
-CMD ["npm","run", "dev"]
+RUN npm run build
+
+EXPOSE $PORT
+
+CMD ["npm", "start"]
