@@ -2,15 +2,12 @@
   "name": "gemini-wellness-be",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
     "build": "babel src -d dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/server.js",
-    "dev": "nodemon --exec babel-node src/server.js",
-    "docker:compose:up": "docker compose up",
-    "docker:compose:down": "docker compose down",
-    "docker:compose:clean": "docker compose down --volumes --rmi all --remove-orphans"
+    "dev": "nodemon --exec babel-node src/server.js"
   },
   "keywords": [],
   "author": "",
