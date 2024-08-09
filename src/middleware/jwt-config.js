@@ -1,4 +1,3 @@
-import { header } from "express/lib/request";
 import jwt from "jsonwebtoken";
 
 export const authMiddleware = (req, res, next) => {
